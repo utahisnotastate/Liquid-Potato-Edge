@@ -1,3 +1,5 @@
+https://doi.org/10.5281/zenodo.18107992
+
 # Liquid-Potato-Edge
 
 Biomimetic Liquid Neural Architectures Enable Robust Control on Legacy Edge Silicon without Accelerators
