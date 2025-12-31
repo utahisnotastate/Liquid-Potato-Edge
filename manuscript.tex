@@ -1,0 +1,79 @@
+\documentclass[fleqn,10pt]{article}
+% Encoding and fonts
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+\usepackage{microtype}
+
+% Math, graphics, layout
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{siunitx}
+
+% Author and metadata
+\usepackage{authblk}
+
+% Hyperlinks and cross-references
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,nameinlink]{cleveref}
+
+% Simple keywords macro
+\providecommand{\keywords}[1]{\par\smallskip\noindent\textbf{Keywords:} #1\par}
+
+\title{Biomimetic Liquid Neural Architectures Enable Robust Control on Legacy Edge Silicon without Accelerators}
+
+\author{Utah Hans}
+\affil{\texttt{utah@utahcreates.com}}
+
+\date{December 31, 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The democratization of artificial intelligence is often constrained by reliance on specialized hardware accelerators. We show that \textbf{Liquid Time-Constant (LTC) networks}, formulated as continuous-time dynamical systems, can outperform discretized recurrent baselines on commodity, CPU-only edge hardware. Deploying a sparse, 14-neuron model on a \SI{15}{W} Intel Celeron N5095 edge node using strictly CPU instruction sets, we observe a \textbf{5.8\% reduction in inference latency} and a \textbf{25.8\% increase in robustness} to Gaussian input noise relative to an LSTM baseline. These findings indicate that differential neural architectures provide a viable path to robust, low-latency autonomous control on localized, low-power silicon.
+\end{abstract}
+
+\keywords{Liquid time-constant networks, continuous-time models, edge intelligence, CPU-only inference, robustness}
+
+\section{Introduction}
+The deployment of autonomous agents in Industrial IoT (IIoT) is frequently limited by the availability of GPU acceleration, creating a practical ``hardware lottery'' for algorithm adoption. In contrast, biological neural systems operate in continuous time; for example, the nematode \textit{C.~elegans} navigates complex environments with only 302 neurons\cite{hasani2021}. We hypothesize that by embracing sparsity and continuous dynamics via Liquid neural networks, high-quality control can be achieved on commodity x86 hardware (e.g., Intel Celeron N5095) without dedicated accelerators.
+
+\section{Results}
+\subsection{Latency and efficiency}
+In a CPU-locked environment based on Intel Jasper Lake, the Liquid architecture (14 neurons) achieved an average inference latency of \textbf{\SI{0.317}{ms}}, compared with \textbf{\SI{0.337}{ms}} for an LSTM baseline (64 neurons), corresponding to a 5.8\% speedup. Notably, the Liquid network used approximately \textbf{400 parameters} versus the LSTM's \textbf{17{,}000 parameters}---a 97\% reduction in memory footprint.
+
+\subsection{Robustness to input noise}
+Under Gaussian noise injection ($\sigma = 0.05$), the Liquid architecture exhibited higher stability, sustaining an average of \textbf{24.86 steps} prior to failure compared with the LSTM's \textbf{19.76 steps} (\Cref{fig:latency-robustness}). This behavior is consistent with the ODE-based dynamics acting as a natural low-pass filter for sensor noise.
+
+\section{Methods}
+\subsection{Experimental protocol}
+All experiments were executed on a consumer-grade mini PC (Intel N5095). To ensure reproducibility on low-end hardware, all CUDA/ROCm acceleration layers were disabled; inference relied exclusively on the CPU's AVX instruction set.
+
+\subsection{Network topology}
+The Liquid cell dynamics are defined by
+\begin{equation}
+\frac{\mathrm{d}x(t)}{\mathrm{d}t} = -\frac{x(t)}{\tau} + S(t),
+\end{equation}
+where $\tau$ is the time constant that enables adaptive temporal resolution, and $S(t)$ denotes the external stimulus.
+
+\begin{figure}[ht]
+  \centering
+  % Ensure FIGURE_1.png is present with exact casing for arXiv/Linux
+  \includegraphics[width=\linewidth]{FIGURE_1.png}
+  \caption{Comparison of inference latency and robustness to Gaussian noise. The Liquid architecture demonstrates lower latency and higher stability relative to the LSTM baseline.}
+  \label{fig:latency-robustness}
+\end{figure}
+
+\section{Data and code availability}
+The datasets and code used in this study are available at: \url{https://github.com/utahisnotastate/Liquid-Potato-Edge}
+
+% Bibliography
+\bibliographystyle{unsrt}
+\bibliography{sample}
+
+\end{document}
